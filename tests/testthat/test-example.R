@@ -58,3 +58,34 @@ test_that("README example gives a clear robust decision", {
   grDevices::dev.off()
   expect_true(file.exists(figure))
 })
+
+test_that("evidence overview plot accepts external IPD", {
+  trial <- wise_example_trial(n_per_arm = 80, seed = 31)
+  external_data <- subset(
+    wise_example_trial(n_per_arm = 100, seed = 32,
+                       administrative_censoring = 10),
+    arm == 0,
+    select = c(time, status)
+  )
+  source <- wise_external_ipd(
+    external_data,
+    arm = 0,
+    tolerance = 0.20,
+    active_range = c(2, 10),
+    name = "External control"
+  )
+  fit <- wise_surv(
+    trial,
+    cutoff = 2,
+    horizon = 15,
+    external = source,
+    specification = wise_spec(effect_upper = 1, residual = c(0, 1),
+                              decline_rate = 1, rebound_rate = 1)
+  )
+  input <- wise_input_region(fit, multipliers = 49, seed = 33)
+  figure <- tempfile(fileext = ".pdf")
+  grDevices::pdf(figure, width = 10, height = 4)
+  expect_silent(plot(fit, input_region = input))
+  grDevices::dev.off()
+  expect_true(file.exists(figure))
+})

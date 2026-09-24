@@ -78,24 +78,43 @@ thresholds in this reproducible example.
 
 ## Plotting
 
-Plot the lower- and upper-bound extremizing marginal-benefit trajectories
-directly:
+Create a publication-style overview of the trial, external evidence, and
+simultaneous difference band:
 
 ```r
-# Fifteen-year sharp structural RMST trajectories
-plot(bounds, which = 3)
+external_data <- subset(
+  wise_example_trial(
+    n_per_arm = 900,
+    seed = 20260925,
+    administrative_censoring = 10
+  ),
+  arm == 0,
+  select = c(time, status)
+)
 
-# Sampling-error-protected QALY trajectories
-plot(qaly)
+external_source <- wise_external_ipd(
+  external_data,
+  arm = 0,
+  tolerance = 0.08,
+  active_range = c(2, 10),
+  name = "External control"
+)
 
-# Optional arm-specific survival trajectories
-plot(bounds, which = 3, type = "survival")
+evidence_fit <- wise_surv(
+  trial = trial_data,
+  cutoff = 2,
+  horizon = 15,
+  external = external_source,
+  specification = spec
+)
+
+plot(evidence_fit)
 ```
 
-![WISE-Surv extremizing survival trajectories](man/figures/README-trajectories.png)
+![WISE-Surv evidence overview](man/figures/README-evidence.png)
 
 The current development version implements structural trajectory classes,
 sharp RMST and discounted-utility bounds, covariance-aware joint multiplier
 input regions, sampling-error-protected outer bounds, external survival
 intervals and individual-level external data, compatibility diagnosis, robust
-fixed-cost NMB decisions, and extremizing trajectory plots.
+fixed-cost NMB decisions, and publication-style evidence visualization.
