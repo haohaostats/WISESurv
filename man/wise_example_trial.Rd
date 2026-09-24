@@ -5,7 +5,7 @@
 \title{Generate a reproducible example two-arm survival trial}
 \usage{
 wise_example_trial(
-  n_per_arm = 300L,
+  n_per_arm = 600L,
   seed = 20260924L,
   administrative_censoring = 5
 )
@@ -21,7 +21,8 @@ wise_example_trial(
 A data frame with columns \code{time}, \code{status}, and \code{arm}.
 }
 \description{
-Creates a small synthetic right-censored trial for learning the package API
-and checking an installation. The generator is not part of the scientific
-simulation design used to evaluate WISE-Surv.
+Creates a well-powered synthetic right-censored trial with a clear survival
+benefit for learning the package API and checking an installation. The
+generator is not part of the scientific simulation design used to evaluate
+WISE-Surv.
 }

@@ -38,9 +38,9 @@ library(WISESurv)
 trial_data <- wise_example_trial()
 
 spec <- wise_spec(
-  effect_upper = 0.20,
-  residual = c(0, 0.80),
-  decline_rate = 0.035,
+  effect_upper = 0.35,
+  residual = c(0.50, 0.80),
+  decline_rate = 0.005,
   rebound_rate = 0.045
 )
 
@@ -71,6 +71,9 @@ qaly <- wise_outer_bounds(
 wise_nmb(qaly, cost = 20000,
          willingness_to_pay = c(20000, 30000, 50000))
 ```
+
+The final call returns `robust adoption` at all three willingness-to-pay
+thresholds in this reproducible example.
 
 The current development version implements structural trajectory classes,
 sharp RMST and discounted-utility bounds, covariance-aware joint multiplier
