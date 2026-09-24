@@ -51,4 +51,10 @@ test_that("README example gives a clear robust decision", {
   expect_true(all(qaly$summary$status == "feasible"))
   expect_true(all(qaly$summary$lower > 1))
   expect_true(all(decision$decision == "robust adoption"))
+
+  figure <- tempfile(fileext = ".pdf")
+  grDevices::pdf(figure)
+  expect_silent(plot(qaly))
+  grDevices::dev.off()
+  expect_true(file.exists(figure))
 })

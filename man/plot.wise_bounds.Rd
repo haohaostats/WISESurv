@@ -4,14 +4,29 @@
 \alias{plot.wise_bounds}
 \title{Plot extremizing trajectories}
 \usage{
-\method{plot}{wise_bounds}(x, which = 1L, ...)
+\method{plot}{wise_bounds}(
+  x,
+  which = 1L,
+  type = c("effect", "survival"),
+  main = NULL,
+  xlab = "Time (years)",
+  ylab = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{A \code{wise_bounds} object.}
 
 \item{which}{Row of the bounds summary to plot.}
 
-\item{...}{Additional arguments passed to \code{plot}.}
+\item{type}{Plot marginal survival-effect trajectories (\code{"effect"}) or the
+four arm-specific extremizing survival trajectories (\code{"survival"}).}
+
+\item{main}{Optional plot title.}
+
+\item{xlab, ylab}{Axis labels.}
+
+\item{...}{Additional graphical arguments passed to \code{plot}.}
 }
 \description{
 Plot extremizing trajectories

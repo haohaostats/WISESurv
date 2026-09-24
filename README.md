@@ -51,7 +51,8 @@ fit <- wise_surv(
   specification = spec
 )
 
-wise_bounds(fit, "rmst", horizons = c(7, 10, 15))
+bounds <- wise_bounds(fit, "rmst", horizons = c(7, 10, 15))
+bounds
 
 outer <- wise_outer_bounds(
   fit,
@@ -74,6 +75,24 @@ wise_nmb(qaly, cost = 20000,
 
 The final call returns `robust adoption` at all three willingness-to-pay
 thresholds in this reproducible example.
+
+## Plotting
+
+Plot the lower- and upper-bound extremizing marginal-benefit trajectories
+directly:
+
+```r
+# Fifteen-year sharp structural RMST trajectories
+plot(bounds, which = 3)
+
+# Sampling-error-protected QALY trajectories
+plot(qaly)
+
+# Optional arm-specific survival trajectories
+plot(bounds, which = 3, type = "survival")
+```
+
+![WISE-Surv extremizing survival trajectories](man/figures/README-trajectories.png)
 
 The current development version implements structural trajectory classes,
 sharp RMST and discounted-utility bounds, covariance-aware joint multiplier

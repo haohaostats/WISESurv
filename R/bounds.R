@@ -93,31 +93,76 @@ summary.wise_bounds <- function(object, ...) object$summary
 #'
 #' @param x A `wise_bounds` object.
 #' @param which Row of the bounds summary to plot.
-#' @param ... Additional arguments passed to `plot`.
+#' @param type Plot marginal survival-effect trajectories (`"effect"`) or the
+#'   four arm-specific extremizing survival trajectories (`"survival"`).
+#' @param main Optional plot title.
+#' @param xlab,ylab Axis labels.
+#' @param ... Additional graphical arguments passed to `plot`.
 #' @export
-plot.wise_bounds <- function(x, which = 1L, ...) {
+plot.wise_bounds <- function(x, which = 1L,
+                             type = c("effect", "survival"), main = NULL,
+                             xlab = "Time (years)",
+                             ylab = NULL, ...) {
   which <- as.integer(which)
+  type <- match.arg(type)
   if (length(which) != 1L || which < 1L || which > nrow(x$summary)) {
     stop("`which` must identify one row of the bounds summary.", call. = FALSE)
   }
   solution <- x$paths[[which]]
   if (is.null(solution)) stop("No trajectories are available for a conflict.", call. = FALSE)
-  grid <- x$fit$grid
+  grid <- if (!is.null(x$problem$grid)) x$problem$grid else x$fit$grid
   n <- length(grid)
-  ylim <- c(0, 1)
-  graphics::plot(grid, solution$lower_path[seq_len(n)], type = "l",
-                 col = "#007C83", lwd = 2, ylim = ylim,
-                 xlab = "Time", ylab = "Survival probability", ...)
-  graphics::lines(grid, solution$lower_path[n + seq_len(n)],
-                  col = "#007C83", lwd = 2, lty = 2)
-  graphics::lines(grid, solution$upper_path[seq_len(n)],
-                  col = "#D97706", lwd = 2)
-  graphics::lines(grid, solution$upper_path[n + seq_len(n)],
-                  col = "#D97706", lwd = 2, lty = 2)
-  graphics::legend("topright",
-                   legend = c("Lower: control", "Lower: intervention",
-                              "Upper: control", "Upper: intervention"),
-                   col = c("#007C83", "#007C83", "#D97706", "#D97706"),
-                   lty = c(1, 2, 1, 2), lwd = 2, bty = "n")
+  horizon <- x$summary$horizon[which]
+  active <- which(grid <= horizon + 1e-10)
+  if (is.null(main)) {
+    main <- sprintf("%g-year %s extremizing %s trajectories",
+                    horizon, toupper(x$estimand),
+                    if (type == "effect") "benefit" else "survival")
+  }
+  if (type == "effect") {
+    lower <- solution$lower_path[n + active] -
+      solution$lower_path[active]
+    upper <- solution$upper_path[n + active] -
+      solution$upper_path[active]
+    ylim <- range(c(lower, upper), finite = TRUE)
+    padding <- max(diff(ylim) * 0.12, 0.005)
+    ylim <- c(ylim[1L] - padding, ylim[2L] + padding)
+    if (is.null(ylab)) ylab <- "Marginal survival benefit"
+    graphics::plot(grid[active], lower, type = "l", col = "#007C83",
+                   lwd = 2.4, ylim = ylim, xlab = xlab, ylab = ylab,
+                   main = main, bty = "l", las = 1, xaxs = "i", ...)
+    graphics::lines(grid[active], upper, col = "#D97706", lwd = 2.4,
+                    lty = 2)
+    if (ylim[1L] <= 0 && ylim[2L] >= 0) {
+      graphics::abline(h = 0, col = "#AAB2BD", lty = 3)
+    }
+    graphics::legend(
+      "bottomleft", legend = c("Lower-bound path", "Upper-bound path"),
+      col = c("#007C83", "#D97706"), lty = c(1, 2), lwd = 2.4,
+      bty = "n"
+    )
+  } else {
+    if (is.null(ylab)) ylab <- "Survival probability"
+    graphics::plot(grid[active], solution$lower_path[active], type = "l",
+                   col = "#007C83", lwd = 2, ylim = c(0, 1),
+                   xlab = xlab, ylab = ylab, main = main,
+                   bty = "l", las = 1, xaxs = "i", yaxs = "i", ...)
+    graphics::lines(grid[active], solution$lower_path[n + active],
+                    col = "#007C83", lwd = 2, lty = 2)
+    graphics::lines(grid[active], solution$upper_path[active],
+                    col = "#D97706", lwd = 2)
+    graphics::lines(grid[active], solution$upper_path[n + active],
+                    col = "#D97706", lwd = 2, lty = 2)
+    graphics::legend(
+      "bottomleft",
+      legend = c("Lower: control", "Lower: intervention",
+                 "Upper: control", "Upper: intervention"),
+      col = c("#007C83", "#007C83", "#D97706", "#D97706"),
+      lty = c(1, 2, 1, 2), lwd = 2, bty = "n", ncol = 2
+    )
+  }
+  if (min(grid[active]) < x$fit$cutoff - 1e-10) {
+    graphics::abline(v = x$fit$cutoff, col = "#7A8490", lty = 3)
+  }
   invisible(x)
 }
