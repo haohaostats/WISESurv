@@ -3,6 +3,34 @@
 `WISESurv` computes sharp assumption-indexed bounds for long-term survival
 benefit, discounted survival utility, and robust net monetary benefit decisions.
 
+## Installation
+
+`WISESurv` requires R 4.1.0 or later. Install the development version from
+GitHub with:
+
+```r
+install.packages("remotes")
+remotes::install_github("haohaostats/WISESurv")
+```
+
+The package uses the HiGHS linear-programming solver. Its R dependency is
+installed automatically from CRAN. If dependency installation has been
+disabled, install the required packages first:
+
+```r
+install.packages(c("highs", "Matrix"))
+remotes::install_github("haohaostats/WISESurv", dependencies = TRUE)
+```
+
+Verify the installation with:
+
+```r
+library(WISESurv)
+packageVersion("WISESurv")
+```
+
+## Basic usage
+
 ```r
 library(WISESurv)
 
