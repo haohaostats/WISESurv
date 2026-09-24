@@ -76,6 +76,12 @@ wise_nmb(qaly, cost = 20000,
 The final call returns `robust adoption` at all three willingness-to-pay
 thresholds in this reproducible example.
 
+| Horizon (years) | Willingness to pay | Incremental cost | NMB lower | NMB upper | Decision |
+|---:|---:|---:|---:|---:|:---|
+| 15 | £20,000 | £20,000 | £3,364 | £28,630 | Robust adoption |
+| 15 | £30,000 | £20,000 | £15,045 | £52,945 | Robust adoption |
+| 15 | £50,000 | £20,000 | £38,409 | £101,574 | Robust adoption |
+
 ## Plotting
 
 Create a publication-style overview of the trial, external evidence, and
