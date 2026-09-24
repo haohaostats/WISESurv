@@ -34,6 +34,9 @@ packageVersion("WISESurv")
 ```r
 library(WISESurv)
 
+# Reproducible example data included with the package
+trial_data <- wise_example_trial()
+
 spec <- wise_spec(
   effect_upper = 0.20,
   residual = c(0, 0.80),
