@@ -1,0 +1,27 @@
+Package: WISESurv
+Type: Package
+Title: Sharp Bounds for Long-Term Survival Extrapolation
+Version: 0.1.0.9000
+Authors@R: person("WISESurv", "Authors", email = "wisesurv@users.noreply.github.com", role = c("aut", "cre"))
+Author: WISESurv Authors [aut, cre]
+Maintainer: WISESurv Authors <wisesurv@users.noreply.github.com>
+Description: Computes assumption-indexed sharp bounds for long-term survival
+    benefit from two-arm randomized trials. The package represents unknown
+    post-trial survival tails as complete trajectories subject to transparent
+    scientific and external-evidence restrictions, solves sparse linear
+    programs for restricted mean survival time and discounted survival utility,
+    diagnoses incompatible restriction sets, and supports robust net monetary
+    benefit decisions.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends: R (>= 4.1.0)
+Imports:
+    highs,
+    Matrix,
+    graphics,
+    stats
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
